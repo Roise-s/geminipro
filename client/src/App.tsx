@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
 import './App.css'
+import { GoogleGenAI } from "@google/genai";
 import Header from './sections/Header'
+
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+
+const ai = new GoogleGenAI({ apiKey: apiKey });
 
 interface Message {
   role: 'user' | 'ai'
@@ -16,19 +21,24 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim()) return
+ async function handleSend(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault()
+ 
+  if (!input.trim()) return
     setMessages([...messages, { role: 'user', content: input }])
+     const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: input,
+  });
     setInput('')
     // Placeholder for AI response
     setTimeout(() => {
       setMessages(msgs => [
         ...msgs,
-        { role: 'ai', content: "I'm Gemini AI. How can I help you?" }
+        { role: 'ai', content: response.text || "I'm not sure how to respond to that." }
       ])
     }, 800)
-  }
+}
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8fafc] to-[#e0e7ef]">
@@ -93,7 +103,7 @@ function App() {
         className="text-center text-gray-400 py-4 text-sm"
         style={{ backgroundColor: '#1f1f1f' }}
       >
-        Gemini UI &copy; {new Date().getFullYear()} Kgaugelo.dev
+        Gemini Pro &copy; {new Date().getFullYear()} Kgaugelo.dev
       </footer>
     </div>
   )
