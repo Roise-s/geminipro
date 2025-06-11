@@ -15,30 +15,31 @@ interface Message {
 function App() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [isSending, setIsSending] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
- async function handleSend(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault()
- 
-  if (!input.trim()) return
+  async function handleSend(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (!input.trim()) return
+    setIsSending(true)
     setMessages([...messages, { role: 'user', content: input }])
-     const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: input,
-  });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: input,
+    });
     setInput('')
-    // Placeholder for AI response
     setTimeout(() => {
       setMessages(msgs => [
         ...msgs,
         { role: 'ai', content: response.text || "I'm not sure how to respond to that." }
       ])
+      setIsSending(false)
     }, 800)
-}
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f8fafc] to-[#e0e7ef]">
@@ -87,13 +88,14 @@ function App() {
               placeholder="Type your message..."
               value={input}
               onChange={e => setInput(e.target.value)}
+              disabled={isSending}
             />
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full font-semibold transition"
-              disabled={!input.trim()}
+              disabled={!input.trim() || isSending}
             >
-              Send
+              {isSending ? "Sending..." : "Send"}
             </button>
           </form>
         </div>
