@@ -4,7 +4,7 @@ Welcome to **Gemini Pro**, a modern front-end boilerplate built with [React](htt
 
 ## 🌐 Live Demo
 
-🔗 [geminipro.ai]([https://kgaugelo.vercel.app](https://geminipro-one-umber.vercel.app/))
+🔗 [geminipro.ai]((https://geminipro-one-umber.vercel.app/))
 
 ## ✨ Features
 
