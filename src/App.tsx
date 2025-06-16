@@ -105,7 +105,7 @@ function App() {
         className="text-center text-gray-400 py-4 text-sm"
         style={{ backgroundColor: '#1f1f1f' }}
       >
-        Gemini Pro &copy; {new Date().getFullYear()} Kgaugelo.dev
+        Kasi AI &copy; {new Date().getFullYear()} Kgaugelo.dev
       </footer>
     </div>
   )
